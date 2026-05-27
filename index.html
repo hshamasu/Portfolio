@@ -106,7 +106,6 @@
     justify-content: center;
     padding: 8rem 3rem 4rem;
     position: relative;
-    overflow: hidden;
   }
   .hero-grid {
     position: absolute;
@@ -116,6 +115,7 @@
       linear-gradient(90deg, rgba(192,132,252,0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+    pointer-events: none;
   }
   .hero-glow {
     position: absolute;
@@ -125,6 +125,7 @@
     background: radial-gradient(circle, rgba(192,132,252,0.08) 0%, transparent 70%);
     top: -100px; left: -100px;
     animation: float 8s ease-in-out infinite;
+    pointer-events: none;
   }
   .hero-glow2 {
     position: absolute;
@@ -134,6 +135,7 @@
     background: radial-gradient(circle, rgba(129,140,248,0.06) 0%, transparent 70%);
     bottom: 0; right: 10%;
     animation: float 10s ease-in-out infinite reverse;
+    pointer-events: none;
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -210,6 +212,8 @@
     padding: 0.75rem 1.75rem;
     border-radius: 100px;
     text-decoration: none;
+    border: none;
+    cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(192,132,252,0.3); }
@@ -226,9 +230,72 @@
     border-radius: 100px;
     text-decoration: none;
     border: 1px solid var(--border2);
+    cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
   }
   .btn-outline:hover { border-color: var(--accent); background: rgba(192,132,252,0.05); }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-content { flex: 1; max-width: 640px; }
+
+  .hero-roles {
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  .hero-photo-wrap {
+    flex-shrink: 0;
+    margin-bottom: 1.8rem;
+  }
+  .hero-photo-ring {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+  }
+  .hero-photo-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--bg3);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .hero-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-photo-initials {
+    position: absolute;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    z-index: 0;
+  }
+  .hero-photo-inner.no-photo .hero-photo-initials { z-index: 1; }
 
   .hero-stats {
     display: flex;
@@ -236,6 +303,8 @@
     margin-top: 5rem;
     padding-top: 3rem;
     border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
   }
   .stat-num {
     font-family: 'Syne', sans-serif;
@@ -362,7 +431,7 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
   .skill-tab {
     padding: 0.5rem 1.2rem;
@@ -383,8 +452,11 @@
   }
   .skill-tab:hover:not(.active) { border-color: var(--border2); color: var(--text); }
 
-  .skills-panel { display: none; }
-  .skills-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; }
+  .skills-all {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+  }
 
   .skill-chip {
     display: flex;
@@ -395,10 +467,17 @@
     border-radius: 10px;
     padding: 0.75rem 1rem;
     font-size: 0.83rem;
-    color: var(--text);
-    transition: border-color 0.2s, transform 0.2s;
+    color: var(--muted);
+    transition: border-color 0.2s, transform 0.2s, color 0.2s, background 0.2s;
+    opacity: 0.45;
   }
-  .skill-chip:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .skill-chip.highlighted {
+    color: var(--text);
+    opacity: 1;
+    border-color: var(--border2);
+    background: var(--bg3);
+  }
+  .skill-chip.highlighted:hover { border-color: var(--accent); transform: translateY(-2px); }
   .skill-dot {
     width: 7px; height: 7px;
     border-radius: 50%;
@@ -684,7 +763,7 @@
     section { padding: 4rem 1.5rem; }
     #hero { padding: 7rem 1.5rem 3rem; }
     .about-grid, .edu-grid, .projects-grid { grid-template-columns: 1fr; }
-    .hero-stats { gap: 1.5rem; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
     footer { flex-direction: column; gap: 0.5rem; text-align: center; }
   }
 </style>
@@ -713,23 +792,37 @@
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
 
-  <div class="hero-tag">Available for full-time roles · May 2026</div>
+  <div class="hero-inner">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-ring">
+        <div class="hero-photo-inner">
+          <img src="photo.jpg" alt="Hitha Shamasundar" class="hero-photo" onerror="this.style.display='none'; this.parentElement.classList.add('no-photo')">
+          <div class="hero-photo-initials">HS</div>
+        </div>
+      </div>
+    </div>
 
-  <h1 class="hero-name">
-    <span class="line1">Hitha</span>
-    <span class="line2">Shamasundar</span>
-  </h1>
+    <div class="hero-tag">Available for full-time roles · May 2026</div>
 
-  <p class="hero-desc">
-    <strong>Software Engineer · Full Stack Developer · SDET</strong><br>
-    I build scalable, intelligent applications — from full-stack systems and REST APIs
-    to AI-powered pipelines and automation frameworks. Currently finishing my
-    <strong>MS in Software Engineering at ASU</strong> (GPA 3.93).
-  </p>
+    <h1 class="hero-name">
+      <span class="line1">Hitha</span>
+      <span class="line2">Shamasundar</span>
+    </h1>
 
-  <div class="hero-cta">
-    <a href="#projects" class="btn-primary">View my work →</a>
-    <a href="#contact" class="btn-outline">Let's connect</a>
+    <p class="hero-roles">Software Engineer · Full Stack Developer · AI Engineer · SDET</p>
+
+    <p class="hero-desc">
+      I build scalable, intelligent systems and experiences —
+      from full-stack applications and AI-powered pipelines to
+      robust automation frameworks. My focus is on engineering
+      that makes a real difference, and I'm passionate about
+      working at the cutting edge of technology.
+    </p>
+
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('experience').scrollIntoView({behavior:'smooth'})">View my work →</button>
+      <button class="btn-outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's connect</button>
+    </div>
   </div>
 
   <div class="hero-stats">
@@ -738,12 +831,12 @@
       <div class="stat-label">GPA at ASU</div>
     </div>
     <div>
-      <div class="stat-num">2<span>+</span></div>
-      <div class="stat-label">Years experience</div>
+      <div class="stat-num">1.5<span>yr</span></div>
+      <div class="stat-label">Industry experience</div>
     </div>
     <div>
-      <div class="stat-num">4</div>
-      <div class="stat-label">Major projects</div>
+      <div class="stat-num">10<span>+</span></div>
+      <div class="stat-label">Projects shipped</div>
     </div>
     <div>
       <div class="stat-num">15<span>+</span></div>
@@ -755,40 +848,42 @@
 <!-- About -->
 <section id="about">
   <div class="section-label">About me</div>
-  <h2 class="section-title">Builder. Tester.<br>Problem-solver.</h2>
+  <h2 class="section-title">Build. Scale. Deliver.</h2>
 
   <div class="about-grid reveal">
     <div class="about-text">
       <p>
-        I'm a <strong>software engineer</strong> with experience across full-stack development,
-        AI systems, and quality engineering. I've worked at <strong>Happiest Minds Technologies</strong>
-        and <strong>HashedIn by Deloitte</strong>, building production systems and automation frameworks.
+        I'm a <strong>software engineer</strong> with around 1.5 years of industry experience across
+        <strong>full-stack development, AI systems, automation frameworks, and quality engineering</strong>.
+        I've built production systems at <strong>Happiest Minds Technologies</strong> and
+        interned at <strong>HashedIn by Deloitte</strong>, where I shipped real features used by real people.
       </p>
       <p>
-        My sweet spot is the intersection of <strong>development and quality</strong> — I care about
-        building things right and making sure they stay right. Whether that's a RAG pipeline,
-        a REST API, or a Cypress test suite, I bring the same attention to detail.
+        I'm passionate about writing <strong>scalable, clean code that actually solves problems</strong> —
+        not just code that works, but code that holds up. Whether I'm building a RAG pipeline,
+        designing a REST API, or engineering a Cypress test suite, I bring the same care to every layer.
       </p>
       <p>
-        I'm currently based in <strong>Tempe, AZ</strong> and open to relocation for the right opportunity.
-        I target full-stack, backend, and SDET roles at companies that care about good engineering.
+        I'm finishing my <strong>Master's in Software Engineering at ASU</strong> (GPA 3.93) and genuinely
+        enjoy collaborating with teams in <strong>fast-moving, evolving tech spaces</strong>. I thrive when
+        the work is challenging, the people are sharp, and the technology is pushing forward.
       </p>
       <div class="about-info-grid">
         <div class="info-item">
           <div class="info-label">Location</div>
-          <div class="info-val">Tempe, AZ</div>
+          <div class="info-val">Chicago, IL<br>[Open to Relocation]</div>
         </div>
         <div class="info-item">
-          <div class="info-label">Status</div>
-          <div class="info-val">Open to roles</div>
+          <div class="info-label">Education</div>
+          <div class="info-val">M.S. Computer Software Engineering</div>
         </div>
         <div class="info-item">
           <div class="info-label">Focus</div>
-          <div class="info-val">SDE / SDET</div>
+          <div class="info-val">SDE · AI · Full Stack· SDET</div>
         </div>
         <div class="info-item">
-          <div class="info-label">Availability</div>
-          <div class="info-val">May 2026</div>
+          <div class="info-label">Status</div>
+          <div class="info-val">Open to offers</div>
         </div>
       </div>
     </div>
@@ -798,26 +893,20 @@
         <div class="resume-card-head">
           <div class="resume-icon">📄</div>
           <div>
-            <div class="resume-title">SDE Resume</div>
-            <div class="resume-sub">Frontend · Backend · Full Stack roles</div>
+            <div class="resume-title">Resume</div>
+            <div class="resume-sub">Full Stack · AI Systems · SDE · Automation</div>
           </div>
         </div>
         <div class="resume-divider"></div>
         <a href="HithaShamasundar_SDEResume.pdf" download class="resume-dl">
-          ↓ Download SDE Resume
+          ↓ Download Resume
         </a>
-
-        <div class="resume-card-head" style="margin-top:1rem;">
-          <div class="resume-icon">🧪</div>
-          <div>
-            <div class="resume-title">QA / SDET Resume</div>
-            <div class="resume-sub">Testing · Automation · Quality Engineering</div>
-          </div>
-        </div>
-        <div class="resume-divider"></div>
-        <a href="HithaShamasundar_QAResume.pdf" download class="resume-dl">
-          ↓ Download QA Resume
-        </a>
+        <p style="font-size:0.72rem; color:var(--muted); margin-top:1.2rem; line-height:1.8;">
+          I also bring hands-on QA &amp; automation testing experience —
+          <a href="#skills" id="qa-skills-link" onclick="goToTestingSkills()" style="color:var(--accent); text-decoration:none;">view testing skills</a>
+          &nbsp;·&nbsp;
+          <a href="HithaShamasundar_QAResume.pdf" download style="color:var(--accent); text-decoration:none;">QA resume</a>
+        </p>
       </div>
     </div>
   </div>
@@ -827,79 +916,64 @@
 <section id="skills">
   <div class="section-label">Tech stack</div>
   <h2 class="section-title">What I work with</h2>
-  <p class="section-sub">A range of tools across development, testing, and infrastructure.</p>
+  <p class="section-sub">Click a category to highlight those skills.</p>
 
   <div class="skills-tabs">
-    <button class="skill-tab active" onclick="showSkills('languages', this)">Languages</button>
-    <button class="skill-tab" onclick="showSkills('web', this)">Web & Backend</button>
-    <button class="skill-tab" onclick="showSkills('ai', this)">AI / ML</button>
-    <button class="skill-tab" onclick="showSkills('testing', this)">Testing & QA</button>
-    <button class="skill-tab" onclick="showSkills('devops', this)">DevOps & Cloud</button>
-    <button class="skill-tab" onclick="showSkills('db', this)">Databases</button>
+    <button class="skill-tab active" onclick="filterSkills('languages', this)">Languages</button>
+    <button class="skill-tab" onclick="filterSkills('web', this)">Web & Backend</button>
+    <button class="skill-tab" onclick="filterSkills('ai', this)">AI / ML</button>
+    <button class="skill-tab" onclick="filterSkills('testing', this)">Testing & QA</button>
+    <button class="skill-tab" onclick="filterSkills('devops', this)">DevOps & Cloud</button>
+    <button class="skill-tab" onclick="filterSkills('db', this)">Databases</button>
   </div>
 
-  <div id="skills-languages" class="skills-panel active">
-    <div class="skill-chip"><span class="skill-dot" style="background:#3776AB"></span>Python</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#ED8B00"></span>Java</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#F7DF1E"></span>JavaScript</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#3178C6"></span>TypeScript</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#00599C"></span>C++</div>
-  </div>
-
-  <div id="skills-web" class="skills-panel">
-    <div class="skill-chip"><span class="skill-dot" style="background:#61DAFB"></span>React</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#000"></span>Next.js</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#E0234E"></span>NestJS</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#339933"></span>Node.js</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#000"></span>Flask</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#4FC08D"></span>Vue</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#e44d26"></span>HTML/CSS</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#563D7C"></span>Bootstrap</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#FF69B4"></span>GraphQL</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#7F52FF"></span>Kotlin</div>
-  </div>
-
-  <div id="skills-ai" class="skills-panel">
-    <div class="skill-chip"><span class="skill-dot" style="background:#412991"></span>OpenAI</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#6A0DAD"></span>LangChain</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#9C6ADE"></span>RAG Pipelines</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#FF6F00"></span>TensorFlow</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#5C3EE8"></span>OpenCV</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#2D9CDB"></span>FAISS</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#34d399"></span>OpenCLIP</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#818cf8"></span>ChromaDB</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#c084fc"></span>Gemini API</div>
-  </div>
-
-  <div id="skills-testing" class="skills-panel">
-    <div class="skill-chip"><span class="skill-dot" style="background:#17202C"></span>Cypress</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#43B02A"></span>Selenium</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#43B02A"></span>REST Assured</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#FF0000"></span>TestNG</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#25A162"></span>JUnit</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#FF6C37"></span>Postman</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#23D18B"></span>Cucumber</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#8D6E63"></span>Appium</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#888"></span>JMeter</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#8DD6F9"></span>Mocha & Chai</div>
-  </div>
-
-  <div id="skills-devops" class="skills-panel">
-    <div class="skill-chip"><span class="skill-dot" style="background:#2496ED"></span>Docker</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#326CE5"></span>Kubernetes</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#D24939"></span>Jenkins</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#2088FF"></span>GitHub Actions</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#FC6D26"></span>GitLab</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#F05032"></span>Git</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#0078D4"></span>Azure</div>
-  </div>
-
-  <div id="skills-db" class="skills-panel">
-    <div class="skill-chip"><span class="skill-dot" style="background:#4169E1"></span>PostgreSQL</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#4479A1"></span>MySQL</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#47A248"></span>MongoDB</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#888"></span>NoSQL</div>
-    <div class="skill-chip"><span class="skill-dot" style="background:#2D3748"></span>Prisma ORM</div>
+  <div class="skills-all">
+    <div class="skill-chip highlighted" data-cat="languages"><span class="skill-dot" style="background:#3776AB"></span>Python</div>
+    <div class="skill-chip highlighted" data-cat="languages"><span class="skill-dot" style="background:#ED8B00"></span>Java</div>
+    <div class="skill-chip highlighted" data-cat="languages"><span class="skill-dot" style="background:#F7DF1E"></span>JavaScript</div>
+    <div class="skill-chip highlighted" data-cat="languages"><span class="skill-dot" style="background:#3178C6"></span>TypeScript</div>
+    <div class="skill-chip highlighted" data-cat="languages"><span class="skill-dot" style="background:#00599C"></span>C++</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#61DAFB"></span>React</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#aaa"></span>Next.js</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#E0234E"></span>NestJS</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#339933"></span>Node.js</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#aaa"></span>Flask</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#4FC08D"></span>Vue</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#e44d26"></span>HTML/CSS</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#563D7C"></span>Bootstrap</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#FF69B4"></span>GraphQL</div>
+    <div class="skill-chip" data-cat="web"><span class="skill-dot" style="background:#7F52FF"></span>Kotlin</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#412991"></span>OpenAI</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#6A0DAD"></span>LangChain</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#9C6ADE"></span>RAG Pipelines</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#FF6F00"></span>TensorFlow</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#5C3EE8"></span>OpenCV</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#2D9CDB"></span>FAISS</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#34d399"></span>OpenCLIP</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#818cf8"></span>ChromaDB</div>
+    <div class="skill-chip" data-cat="ai"><span class="skill-dot" style="background:#c084fc"></span>Gemini API</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#17202C"></span>Cypress</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#43B02A"></span>Selenium</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#43B02A"></span>REST Assured</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#FF0000"></span>TestNG</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#25A162"></span>JUnit</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#FF6C37"></span>Postman</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#23D18B"></span>Cucumber</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#8D6E63"></span>Appium</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#888"></span>JMeter</div>
+    <div class="skill-chip" data-cat="testing"><span class="skill-dot" style="background:#8DD6F9"></span>Mocha & Chai</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#2496ED"></span>Docker</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#326CE5"></span>Kubernetes</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#D24939"></span>Jenkins</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#2088FF"></span>GitHub Actions</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#FC6D26"></span>GitLab</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#F05032"></span>Git</div>
+    <div class="skill-chip" data-cat="devops"><span class="skill-dot" style="background:#0078D4"></span>Azure</div>
+    <div class="skill-chip" data-cat="db"><span class="skill-dot" style="background:#4169E1"></span>PostgreSQL</div>
+    <div class="skill-chip" data-cat="db"><span class="skill-dot" style="background:#4479A1"></span>MySQL</div>
+    <div class="skill-chip" data-cat="db"><span class="skill-dot" style="background:#47A248"></span>MongoDB</div>
+    <div class="skill-chip" data-cat="db"><span class="skill-dot" style="background:#888"></span>NoSQL</div>
+    <div class="skill-chip" data-cat="db"><span class="skill-dot" style="background:#2D3748"></span>Prisma ORM</div>
   </div>
 </section>
 
@@ -978,7 +1052,7 @@
     <div class="edu-card">
       <div class="edu-badge">Graduate</div>
       <div class="edu-school">Arizona State University</div>
-      <div class="edu-degree">Master of Science in Software Engineering</div>
+      <div class="edu-degree">M.S. Computer Software Engineering</div>
       <div class="edu-meta">
         <div class="edu-pill"><span class="dot"></span>Tempe, AZ</div>
         <div class="edu-pill"><span class="dot"></span>May 2026</div>
@@ -1093,7 +1167,7 @@
       <span class="grad">something great</span>
     </div>
     <p class="contact-sub">
-      I'm actively looking for full-time Software Engineering and SDET roles starting May 2026.
+      I'm actively looking for full-time Software Engineering and SDET roles starting June 2026.
       If you have an opportunity or just want to talk tech, reach out.
     </p>
     <div class="contact-links">
@@ -1124,7 +1198,7 @@
 
 <footer>
   <span>© 2026 Hitha Shamasundar</span>
-  <span>Tempe, AZ · Open to relocation</span>
+  <span>Chicago, IL · Open to relocation</span>
 </footer>
 
 <script>
@@ -1153,12 +1227,26 @@
     el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
   });
 
-  // Skills tabs
-  function showSkills(id, btn) {
-    document.querySelectorAll('.skills-panel').forEach(p => p.classList.remove('active'));
+  // Skills filter — all chips visible, active category highlighted
+  function filterSkills(cat, btn) {
     document.querySelectorAll('.skill-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('skills-' + id).classList.add('active');
     btn.classList.add('active');
+    document.querySelectorAll('.skill-chip').forEach(chip => {
+      if (chip.dataset.cat === cat) {
+        chip.classList.add('highlighted');
+      } else {
+        chip.classList.remove('highlighted');
+      }
+    });
+  }
+
+  // Jump to skills section and activate Testing & QA tab
+  function goToTestingSkills() {
+    document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      const testingBtn = document.querySelector('.skill-tab[onclick*="testing"]');
+      if (testingBtn) filterSkills('testing', testingBtn);
+    }, 600);
   }
 
   // Scroll reveal
